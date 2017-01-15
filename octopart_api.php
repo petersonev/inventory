@@ -3,11 +3,9 @@
 require('config_local.php');
 
 function getDatasheets($uid) {
-    global $apikey;
-
     $url = "http://octopart.com/api/v3/parts/";
     $url .= $uid;
-    $url .= "?apikey=" . $apikey;
+    $url .= "?apikey=" . APIKEY;
     $url .= "&include[]=datasheets";
     $url .= "&hide[]=offers";
     $content = file_get_contents($url);
@@ -26,11 +24,34 @@ function getDatasheets($uid) {
     return $out;
 }
 
-function getUIDs($search) {
-    global $apikey;
+function getInfo($uid) {
+    $url = "http://octopart.com/api/v3/parts/";
+    $url .= $uid;
+    $url .= "?apikey=" . APIKEY;
+    $url .= "&include[]=short_description";
+    $url .= "&include[]=specs";
+    // more includes?
+    $url .= "&hide[]=offers";
+    $content = file_get_contents($url);
+    $json = json_decode($content, true);
 
+    $out = array();
+    $out['mpn'] = $json['mpn'];
+    $out['description'] = $json['short_description'];
+    $out['manufacturer'] = array($json['manufacturer']['name'],
+            $json['manufacturer']['homepage_url']);
+
+    foreach ($json['specs'] as $name => $spec) {
+        $out['specs'][$name] = array('name' => $spec['metadata']['name'],
+                'value' => $spec['display_value']);
+    }
+
+    return $out;
+}
+
+function getUIDs($search) {
     $url = "http://octopart.com/api/v3/parts/match";
-    $url .= "?apikey=" . $apikey;
+    $url .= "?apikey=" . APIKEY;
     $url .= "&hide[]=offers";
 
     $queries = '[
@@ -52,5 +73,3 @@ function getUIDs($search) {
 
     return $out;
 }
-
-?>

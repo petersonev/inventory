@@ -1,6 +1,12 @@
 <?php
-// Insert API key here
-define('APIKEY', 'API KEY');
+
+// Insert Octopart API key here
+define('OCTO_APIKEY', '');
+
+// Insert Digikey API info here
+define('DIGI_USER', '');
+define('DIGI_PASSWORD', '');
+define('DIGI_PARTNER_ID', '{}');
 
 // Insert MySQL database info here
 define('HOST', 'SERVER IP');

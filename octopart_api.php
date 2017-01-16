@@ -1,11 +1,11 @@
 <?php
 
-require('config_local.php');
+require_once('config_local.php');
 
 function getDatasheets($uid) {
     $url = "http://octopart.com/api/v3/parts/";
     $url .= $uid;
-    $url .= "?apikey=" . APIKEY;
+    $url .= "?apikey=" . OCTO_APIKEY;
     $url .= "&include[]=datasheets";
     $url .= "&hide[]=offers";
     $content = file_get_contents($url);
@@ -27,7 +27,7 @@ function getDatasheets($uid) {
 function getInfo($uid) {
     $url = "http://octopart.com/api/v3/parts/";
     $url .= $uid;
-    $url .= "?apikey=" . APIKEY;
+    $url .= "?apikey=" . OCTO_APIKEY;
     $url .= "&include[]=short_description";
     $url .= "&include[]=specs";
     // more includes?
@@ -51,11 +51,11 @@ function getInfo($uid) {
 
 function getUIDs($search) {
     $url = "http://octopart.com/api/v3/parts/match";
-    $url .= "?apikey=" . APIKEY;
+    $url .= "?apikey=" . OCTO_APIKEY;
     $url .= "&hide[]=offers";
 
     $queries = '[
-        {"q": "' . $search . '",
+        {"mpn": "' . $search . '",
          "reference": "line1"}
     ]';
     $json_q = json_decode($queries, true);

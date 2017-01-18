@@ -1,6 +1,6 @@
 <?php
 
-require_once('config_local.php');
+require_once 'config_local.php';
 
 function getDatasheets($uid) {
     $url = "http://octopart.com/api/v3/parts/";
@@ -41,6 +41,7 @@ function getInfo($uid) {
     $out['manufacturer'] = array($json['manufacturer']['name'],
             $json['manufacturer']['homepage_url']);
 
+    $out['specs'] = array();
     foreach ($json['specs'] as $name => $spec) {
         $out['specs'][$name] = array('name' => $spec['metadata']['name'],
                 'value' => $spec['display_value']);
@@ -49,7 +50,7 @@ function getInfo($uid) {
     return $out;
 }
 
-function getUIDs($search) {
+function getUIDs($search, $exact = TRUE) {
     $url = "http://octopart.com/api/v3/parts/match";
     $url .= "?apikey=" . OCTO_APIKEY;
     $url .= "&hide[]=offers";
@@ -60,6 +61,9 @@ function getUIDs($search) {
     ]';
     $json_q = json_decode($queries, true);
     $url .= "&queries=" . urlencode(json_encode($json_q));
+    if ($exact) {
+        $url .= '&exact_only=true';
+    }
 
     $content = file_get_contents($url);
     $json = json_decode($content, true);
